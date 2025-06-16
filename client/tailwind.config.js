@@ -20,6 +20,9 @@ export default {
         display: ['Poppins', 'sans-serif'],
         handwriting: ['"Pacifico"', 'cursive'],
       },
+       fontFamily: {
+        poppins: ['Poppins', 'sans-serif'],
+      },
       keyframes: {
         marquee: {
           '0%': { transform: 'translateX(-100%)' },

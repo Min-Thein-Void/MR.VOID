@@ -26,13 +26,11 @@ function RecipeCreateForm() {
 
   const uploadFile = (e) => {
     let file = e.target.files[0];
-    console.log(file);
     setFile(file);
 
     const fileReader = new FileReader();
 
     fileReader.onload = (e) => {
-      console.log(e.target.result);
       setPreview(e.target.result);
     };
 
@@ -99,104 +97,124 @@ function RecipeCreateForm() {
   }, [id]);
 
   return (
-    <div className="max-w-2xl mx-auto p-8 bg-white rounded-lg shadow-xl mt-4 mb-4">
-      <h2 className="text-4xl font-bold text-center text-orange-600 mb-6">
-        Recipe {id ? "Edit" : "Create"} Form
-      </h2>
+    <div className="min-h-screen flex items-center justify-center bg-orange-300 px-2 py-8">
+      <div className="w-full max-w-2xl mx-auto mt-[140px] p-6 sm:p-10 bg-white/40 border border-orange-200/60 rounded-3xl shadow-2xl backdrop-blur-xl relative overflow-hidden text-orange-900">
+        {/* Decorative Glass Bubbles */}
+        <span className="absolute -top-8 -left-8 w-24 h-24 bg-white/30 rounded-full blur-2xl opacity-60 pointer-events-none"></span>
+        <span className="absolute -bottom-10 right-0 w-28 h-28 bg-orange-200/40 rounded-full blur-3xl opacity-40 pointer-events-none"></span>
+        <span className="absolute top-1/2 left-1/2 w-12 h-12 bg-orange-100/40 rounded-full blur-xl opacity-30 pointer-events-none"></span>
 
-      <form>
-        {/* Recipe Title */}
-        <div className="mb-6">
-          <input type="file" onChange={uploadFile} />
-          {preview && (
-            <img src={preview} className="w-96 h-64 object-contain" />
-          )}
-          <label
-            className="block text-orange-700 font-semibold mt-4"
-            htmlFor="title"
-          >
-            Recipe Title
-          </label>
-          <input
-            type="text"
-            id="title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="w-full px-4 py-3 mt-2 border border-orange-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 transition ease-in-out duration-300"
-            placeholder="Enter recipe title"
-          />
-        </div>
+        <h2 className="text-3xl sm:text-4xl font-bold text-center text-orange-900 mb-8 drop-shadow-lg">
+          Recipe {id ? "Edit" : "Create"} Form
+        </h2>
 
-        {/* Ingredients */}
-        <div className="mb-6">
-          <label
-            className="block text-orange-700 font-semibold"
-            htmlFor="ingredients"
-          >
-            Ingredients
-          </label>
+        <form>
+          {/* Recipe Image Upload */}
+          <div className="mb-6 flex flex-col items-center">
+            <input
+              type="file"
+              onChange={uploadFile}
+              className="mb-2 text-orange-900"
+            />
+            {preview && (
+              <img
+                src={preview}
+                className="w-64 h-40 object-contain rounded-xl border border-orange-100 shadow bg-white/50 backdrop-blur mb-2"
+                alt="Preview"
+              />
+            )}
+          </div>
 
-          <div className="flex items-center space-x-4 mt-2">
+          {/* Recipe Title */}
+          <div className="mb-6">
+            <label
+              className="block text-orange-700 font-semibold mb-1"
+              htmlFor="title"
+            >
+              Recipe Title
+            </label>
             <input
               type="text"
-              value={newIngredient}
-              onChange={(e) => setNewIngredient(e.target.value)}
-              className="w-full px-4 py-3 border border-orange-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 transition ease-in-out duration-300"
+              id="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="w-full px-4 py-3 mt-2 bg-white/60 border border-orange-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400 transition placeholder-orange-300 text-orange-900 shadow-md backdrop-blur"
+              placeholder="Enter recipe title"
             />
-            <button
-              disabled={!newIngredient}
-              className="p-1 px-3 bg-orange-500 rounded-full text-3xl text-white hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-300 transition ease-in-out duration-300"
-              onClick={addRecipe}
-            >
-              +
-            </button>
-            <button
-              className="p-1 px-3 bg-red-500 rounded-xl text-3xl text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300 transition ease-in-out duration-300"
-              onClick={removeRecipe}
-            >
-              x
-            </button>
           </div>
 
-          <div className="mt-4">
-            <p className="font-semibold text-orange-800">Ingredients:</p>
-            <ul className="list-decimal pl-5 text-orange-600 font-bold">
-              {ingredient.map((item, index) => (
-                <li key={index}>{item}</li>
-              ))}
-            </ul>
+          {/* Ingredients */}
+          <div className="mb-6">
+            <label
+              className="block text-orange-700 font-semibold mb-1"
+              htmlFor="ingredients"
+            >
+              Ingredients
+            </label>
+            <div className="flex items-center space-x-3 mt-2">
+              <input
+                type="text"
+                value={newIngredient}
+                onChange={(e) => setNewIngredient(e.target.value)}
+                className="w-full px-4 py-2 bg-white/60 border border-orange-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400 transition placeholder-orange-300 text-orange-900 shadow-md backdrop-blur"
+                placeholder="Add ingredient"
+              />
+              <button
+                disabled={!newIngredient}
+                className="p-1 px-3 bg-orange-400/80 rounded-full text-2xl text-white hover:bg-orange-500/90 focus:outline-none focus:ring-2 focus:ring-orange-300 transition"
+                onClick={addRecipe}
+                type="button"
+              >
+                +
+              </button>
+              <button
+                className="p-1 px-3 bg-red-400/80 rounded-xl text-2xl text-white hover:bg-red-500/90 focus:outline-none focus:ring-2 focus:ring-red-300 transition"
+                onClick={removeRecipe}
+                type="button"
+              >
+                ×
+              </button>
+            </div>
+            <div className="mt-4">
+              <p className="font-semibold text-orange-800">Ingredients:</p>
+              <ul className="list-decimal pl-5 text-orange-700 font-bold">
+                {ingredient.map((item, index) => (
+                  <li key={index}>{item}</li>
+                ))}
+              </ul>
+            </div>
           </div>
-        </div>
 
-        {/* Recipe Description */}
-        <div className="mb-6">
-          <label
-            className="block text-orange-700 font-semibold"
-            htmlFor="description"
-          >
-            Description
-          </label>
-          <textarea
-            id="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="w-full px-4 py-3 mt-2 border border-orange-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 transition ease-in-out duration-300"
-            placeholder="Enter recipe description"
-            rows="4"
-          />
-        </div>
+          {/* Recipe Description */}
+          <div className="mb-6">
+            <label
+              className="block text-orange-700 font-semibold mb-1"
+              htmlFor="description"
+            >
+              Description
+            </label>
+            <textarea
+              id="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="w-full px-4 py-3 mt-2 bg-white/60 border border-orange-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400 transition placeholder-orange-300 text-orange-900 shadow-md backdrop-blur"
+              placeholder="Enter recipe description"
+              rows="4"
+            />
+          </div>
 
-        {/* Submit Button */}
-        <div className="flex justify-center mt-6">
-          <button
-            type="submit"
-            onClick={submit}
-            className="px-8 py-3 bg-orange-600 text-white font-semibold rounded-md shadow-lg hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 transition ease-in-out duration-300"
-          >
-            {id ? "Update" : "Create"} Recipe
-          </button>
-        </div>
-      </form>
+          {/* Submit Button */}
+          <div className="flex justify-center mt-6">
+            <button
+              type="submit"
+              onClick={submit}
+              className="px-8 py-3 bg-orange-400/80 hover:bg-orange-500/90 text-white font-semibold rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-orange-400 transition text-base backdrop-blur border border-white/30"
+            >
+              {id ? "Update" : "Create"} Recipe
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

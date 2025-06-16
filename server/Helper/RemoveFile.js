@@ -1,17 +1,17 @@
 const fs = require('fs').promises;
-
-let RemoveFile = async(path) => {
-    let fileExist;
-    try {
-      await fs.access(path)
-      fileExist = true;
-    } catch (e) {
-      console.log(e)
-      fileExist = false;
+let RemoveFile = async (filePath) => {
+    if (!filePath) {
+        console.error("RemoveFile: filePath is undefined or empty.");
+        return;
     }
-    if(fileExist){
-       fs.unlink(path)
+    try {
+        await fs.access(filePath);
+        await fs.unlink(filePath);
+    } catch (e) {
+        if (e.code !== 'ENOENT') {
+            console.error("RemoveFile error:", e);
+        }
     }
 }
 
-module.exports = RemoveFile
+module.exports = RemoveFile;

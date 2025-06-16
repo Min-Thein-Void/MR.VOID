@@ -15,11 +15,11 @@ function RecipeDetail() {
     try {
       const data = {
         text,
-        recipe: id, 
+        recipe: id,
       };
-      const res = await axios.post("/api/text/comments", data); 
-      setComments(res.data); 
-      setText(""); 
+      const res = await axios.post("/api/text/comments", data);
+      setComments(res.data);
+      setText("");
     } catch (err) {
       console.error("Error posting comment:", err);
     }
@@ -40,7 +40,7 @@ function RecipeDetail() {
 
     const fetchComments = async () => {
       try {
-        const res = await axios.get(`/api/text/comments/recipe/${id}`); // Update this endpoint as per your backend
+        const res = await axios.get(`/api/text/comments/recipe/${id}`);
         setComments(res.data);
       } catch (err) {
         console.error("Failed to fetch comments:", err);
@@ -60,54 +60,57 @@ function RecipeDetail() {
   }
 
   return (
-    <div className="w-full px-6 py-10 bg-orange-950 min-h-screen">
+    <div className="w-full min-h-screen bg-gradient-to-r from-blue-900 to-orange-900 px-2 py-8">
       {/* Recipe Section */}
-      <div className="max-w-7xl mx-auto p-8 bg-orange-900 shadow-2xl rounded-lg flex flex-col md:flex-row justify-between gap-16">
+      <div className="max-w-5xl mx-auto p-4 sm:p-8 bg-white/40 border border-orange-200/60 shadow-2xl mt-[160px] rounded-3xl backdrop-blur-xl flex flex-col md:flex-row justify-between gap-10 md:gap-16 relative overflow-hidden">
+        {/* Decorative Glass Bubbles */}
+        <span className="absolute -top-8 -left-8 w-24 h-24 bg-white/30 rounded-full blur-2xl opacity-60 pointer-events-none"></span>
+        <span className="absolute -bottom-10 right-0 w-28 h-28 bg-orange-200/40 rounded-full blur-3xl opacity-40 pointer-events-none"></span>
+        <span className="absolute top-1/2 left-1/2 w-12 h-12 bg-orange-100/40 rounded-full blur-xl opacity-30 pointer-events-none"></span>
         {/* Image */}
-        <div className="md:w-1/2 w-full">
+        <div className="md:w-1/2 w-full flex justify-center items-center">
           <img
             src={import.meta.env.VITE_BACKEND_URL + recipe.photo}
             alt={recipe.title}
-            className="w-full h-auto hover:scale-105 transition-transform duration-300"
+            className="w-full max-w-xs sm:max-w-sm md:max-w-xs h-auto object-cover"
           />
         </div>
 
         {/* Details */}
-        <div className="md:w-1/2 w-full flex flex-col justify-center text-white font-serif">
-          <h1 className="text-5xl font-extrabold mb-6 tracking-wide">
+        <div className="md:w-1/2 w-full flex flex-col justify-center text-orange-900 font-serif mt-6 md:mt-0">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-light mb-4 tracking-wide text-orange-300 drop-shadow capitalize">
             {recipe.title}
           </h1>
 
-          <h3 className="text-3xl font-bold mb-4 text-orange-200">
+          <h3 className="text-lg sm:text-xl mb-2 text-orange-900 font-light">
             Ingredients
           </h3>
-          <ul className="list-disc list-inside space-y-3 text-xl font-medium">
+          <ul className="list-none space-y-2 font-medium mb-4">
             {(recipe.ingredient || []).map((ingredient, index) => (
-              <li key={index} className="capitalize">
+              <li key={index} className="capitalize text-orange-200">
                 {index + 1}. {ingredient}
               </li>
             ))}
           </ul>
 
-          <h3 className="text-2xl font-bold mt-8 mb-3 text-orange-200">
+          <h3 className="text-base sm:text-lg font-light mt-4 mb-2 text-orange-900">
             Description
           </h3>
-          <p className="text-lg leading-relaxed font-light tracking-wide">
+          <p className="text-sm sm:text-base leading-relaxed font-light tracking-wide bg-white/30 rounded-xl px-3 py-2 mb-4 text-orange-900 backdrop-blur">
             {recipe.description}
           </p>
 
           {/* Buttons */}
-          <div className="flex flex-wrap gap-4 mt-10">
+          <div className="flex flex-wrap gap-3 mt-6">
             <button
               onClick={() => navigate("/recipes")}
-              className="bg-orange-100 hover:bg-orange-200 text-orange-800 font-bold py-3 px-6 rounded-full shadow-md transition-all duration-300"
+              className="bg-white/60 hover:bg-orange-100 text-orange-700 font-semibold py-2 px-5 rounded-full shadow-md transition-all duration-300 border border-orange-200/60 backdrop-blur"
             >
               ← Back to Recipes
             </button>
-
             <button
               onClick={() => navigate(`/recipe/edit/${id}`)}
-              className="bg-white hover:bg-orange-100 text-orange-800 font-bold py-3 px-6 rounded-full shadow-md transition-all duration-300"
+              className="bg-orange-400/80 hover:bg-orange-500/90 text-white font-semibold py-2 px-5 rounded-full shadow-md transition-all duration-300 border border-white/30 backdrop-blur"
             >
               ✏️ Edit Recipe
             </button>
@@ -115,31 +118,7 @@ function RecipeDetail() {
         </div>
       </div>
 
-      {/* Comments Section */}
-      <div className="max-w-4xl mx-auto mt-12 bg-orange-900 text-white p-8 rounded-lg shadow-xl">
-        <h2 className="text-3xl font-bold mb-6">Comments</h2>
-
-        <div className="space-y-4 mb-6">
-        {comments.map((comment) => {
-  return <p key={comment._id}>{comment.text}</p>;
-})}
-
-        </div>
-
-        {/* Comment Input */}
-        <textarea
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder="Leave a comment..."
-          className="w-full h-32 p-4 rounded-md bg-orange-800 text-white placeholder-orange-300 focus:outline-none focus:ring-2 focus:ring-orange-500 resize-none"
-        ></textarea>
-        <button
-          onClick={postComment}
-          className="mt-4 bg-orange-200 text-orange-900 font-bold py-2 px-6 rounded-full hover:bg-orange-300 transition-all duration-300"
-        >
-          Post Comment
-        </button>
-      </div>
+     
     </div>
   );
 }
