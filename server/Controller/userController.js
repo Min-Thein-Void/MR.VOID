@@ -3,9 +3,15 @@ const createToken = require("../Helper/createToken");
 
 const userController = {
   me: async (req, res) => {
-    if (!req.user) return res.status(401).json({ error: "Unauthorized" });
+  try {
+    if (!req.user) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
     return res.status(200).json(req.user);
-  },
+  } catch (e) {
+    return res.status(500).json({ error: "Server error" });
+  }
+},
 
   login: async (req, res) => {
     try {

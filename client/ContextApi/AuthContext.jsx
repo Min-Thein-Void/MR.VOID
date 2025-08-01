@@ -1,14 +1,14 @@
 import { createContext, useReducer } from "react";
+import axios from "../Helper/axios";
 
 const AuthContext = createContext();
 
 const AuthReducer = (state, action) => {
   switch (action.type) {
     case "login":
-      // Only store token if needed:
-      localStorage.setItem("token", action.payload.token); // or remove this if using cookies only
+      localStorage.setItem("token", JSON.stringify(action.payload));
       return {
-        user: action.payload.user,
+        user: action.payload,
       };
     case "logout":
       localStorage.removeItem("token");
@@ -20,14 +20,29 @@ const AuthReducer = (state, action) => {
   }
 };
 
+const loadUser = async (dispatch) => {
+  try {
+    const res = await axios.get("/api/me");
+    if (res.status === 200) {
+      dispatch({ type: "login", payload: res.data });
+    } else {
+      dispatch({ type: "logout" });
+    }
+  } catch {
+    dispatch({ type: "logout" });
+  }
+};
+
 const AuthContextProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(AuthReducer, { user: null });
+  let [state, dispatch] = useReducer(AuthReducer, {
+    user: null,
+  });
 
   return (
-    <AuthContext.Provider value={{ ...state, dispatch }}>
+    <AuthContext.Provider value={{ ...state, dispatch, loadUser }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-export { AuthContext, AuthContextProvider };
+export { AuthContext, AuthContextProvider, loadUser };

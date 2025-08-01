@@ -1,9 +1,6 @@
-// src/Helper/axios.js (or wherever you're using it)
-import axios from 'axios';
+import axios from "axios";
 
-const instance = axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_URL, // ✅ e.g., http://localhost:9000
-  withCredentials: true, // ✅ send cookies like jwt
-});
+axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
+axios.defaults.withCredentials = true;
 
-export default instance;
+export default axios;
