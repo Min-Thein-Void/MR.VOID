@@ -11,7 +11,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const corsOptions = {
   origin: "http://localhost:5173",
-  methods: ["GET", "POST", "PATCH", "DELETE"],
+  methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
   credentials: true,
 };
 app.use(cors(corsOptions));
