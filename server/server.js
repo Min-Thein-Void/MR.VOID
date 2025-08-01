@@ -1,25 +1,23 @@
 const express = require("express");
-const app = express();
+const mongoose = require("mongoose");
+const morgan = require("morgan");
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
+require("dotenv").config();
+
 const routersRecipes = require("./Routes/router");
 const loginAndRegisterRoute = require("./Routes/registerRoute");
 const commentRoute = require("./Routes/commentRoute");
-const morgan = require("morgan");
-require("dotenv").config();
 
-const cors = require("cors");
-const cookieParser = require("cookie-parser");
+const app = express();
 
-// ✅ Allow listed origins
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://mr-void.vercel.app",
-  "https://mr-void-git-main-mr-voids-projects-ef477560.vercel.app",
-  "https://mr-void-huu8trx4g-mr-voids-projects-ef477560.vercel.app"
-];
+// ✅ Dynamically handle frontend URL from .env
+const allowedOrigins = (process.env.FRONTEND_URL || "")
+  .split(",")
+  .map(origin => origin.trim());
 
 const corsOptions = {
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl)
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -30,31 +28,29 @@ const corsOptions = {
   credentials: true,
 };
 
+// Middleware
 app.use(morgan("dev"));
-app.use(express.static("Public"));
-app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
-// ✅ Handle preflight requests
-app.options('*', cors(corsOptions));
-
-const mongoose = require("mongoose");
-const recipe = require("./Model/Recipe");
-
-mongoose.connect(process.env.MONGO_URl).then(() => {
-  console.log("Connected to DB");
-  app.listen(process.env.PORT || 9000, () => {
-    console.log("App is running on port 9000");
-  });
-});
-
-app.get("/", (req, res) => {
-  res.json(recipe);
-});
-
+// Routes
 app.use("/api/recipes", routersRecipes);
 app.use("/api", loginAndRegisterRoute);
 app.use("/api/text", commentRoute);
+
+// DB Connection & Server Start
+mongoose
+  .connect(process.env.MONGO_URl)
+  .then(() => {
+    console.log("✅ Connected to MongoDB");
+    app.listen(process.env.PORT || 9000, () => {
+      console.log(`🚀 Server running on port ${process.env.PORT || 9000}`);
+    });
+  })
+  .catch((err) => {
+    console.error("❌ MongoDB connection failed:", err);
+  });
 
 module.exports = app;
