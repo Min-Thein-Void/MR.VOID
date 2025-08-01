@@ -42,9 +42,7 @@ app.options('*', cors(corsOptions));
 const mongoose = require("mongoose");
 const recipe = require("./Model/Recipe");
 
-let url = "mongodb+srv://TunTun:1234@kokothein.tbnlb.mongodb.net/?retryWrites=true&w=majority&appName=KoKoThein";
-
-mongoose.connect(url).then(() => {
+mongoose.connect(process.env.MONGO_URl).then(() => {
   console.log("Connected to DB");
   app.listen(process.env.PORT || 9000, () => {
     console.log("App is running on port 9000");

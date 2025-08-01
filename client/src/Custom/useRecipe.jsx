@@ -11,7 +11,7 @@ function useRecipe() {
   const fetchRecipes = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("/api/recipes", {
+      const res = await axios.get('/api/recipes', {
         params: {
           search: searchTerm.trim(),
         },
