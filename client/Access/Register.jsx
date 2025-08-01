@@ -4,44 +4,38 @@ import { useState, useContext } from "react";
 import { AuthContext } from "../ContextApi/AuthContext";
 
 function Register() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
 
   const navigate = useNavigate();
-  const { dispatch } = useContext(AuthContext); 
+  const { dispatch } = useContext(AuthContext);
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.id]: e.target.value });
+    setError((prev) => ({ ...prev, [e.target.id]: null, general: null }));
+  };
 
   const register = async (e) => {
     e.preventDefault();
     setError(null);
     setSuccess(false);
     try {
-      const formData = { name, email, password };
-      const res = await axios.post("/api/register", formData, {
-        withCredentials: true,
-      });
-
-      if (res.status === 200) {
-        dispatch({ type: "login", payload: res.data.user }); 
-
+      const res = await axios.post("/api/register", form, { withCredentials: true });
+      if (res.status === 201) {
+        dispatch({ type: "login", payload: res.data.user });
         setSuccess(true);
-        setName("");
-        setEmail("");
-        setPassword("");
-
+        setForm({ name: "", email: "", password: "" });
         navigate("/");
       }
     } catch (e) {
       setError(
-        e.response?.data?.errors || {
-          general: { msg: "Registration failed" },
-        }
+        e.response?.data?.error
+          ? { general: { msg: e.response.data.error } }
+          : e.response?.data?.errors || { general: { msg: "Registration failed" } }
       );
     }
   };
-
 
   return (
     <div className="bg-orange-300">
@@ -78,8 +72,8 @@ function Register() {
               <input
                 type="text"
                 id="name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={form.name}
+                onChange={handleChange}
                 placeholder="Enter your name..."
                 className={`px-4 py-3 rounded-xl bg-white/40 border backdrop-blur text-orange-900 shadow-inner focus:outline-none focus:ring-2 focus:ring-orange-400 transition ${
                   error?.name
@@ -103,8 +97,8 @@ function Register() {
               <input
                 type="text"
                 id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={form.email}
+                onChange={handleChange}
                 placeholder="Enter email..."
                 className={`px-4 py-3 rounded-xl bg-white/40 border backdrop-blur text-orange-900 shadow-inner focus:outline-none focus:ring-2 focus:ring-orange-400 transition ${
                   error?.email
@@ -128,8 +122,8 @@ function Register() {
               <input
                 type="password"
                 id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={form.password}
+                onChange={handleChange}
                 placeholder="Enter password..."
                 className={`px-4 py-3 rounded-xl bg-white/40 border backdrop-blur text-orange-900 shadow-inner focus:outline-none focus:ring-2 focus:ring-orange-400 transition ${
                   error?.password

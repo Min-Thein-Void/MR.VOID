@@ -15,6 +15,12 @@ const corsOptions = {
   credentials: true,
 };
 app.use(cors(corsOptions));
+app.use(express.json());
+app.use(cookieParser());
+
+// Handle preflight requests for all routes
+app.options('*', cors(corsOptions));
+
 const mongoose = require("mongoose");
 const recipe = require("./Model/Recipe");
 let url =
@@ -25,11 +31,9 @@ mongoose.connect(url).then(() => {
     console.log("App is running on port 9000");
   });
 });
-app.use(cookieParser());
 app.get("/", (req, res) => {
   res.json(recipe);
 });
-app.use(express.json());
 app.use("/api/recipes", routersRecipes);
 app.use("/api", loginAndRegisterRoute);
 app.use("/api/text", commentRoute);

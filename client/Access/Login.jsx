@@ -5,18 +5,22 @@ import { AuthContext } from "../ContextApi/AuthContext";
 
 function Login() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState({});
   const { dispatch } = useContext(AuthContext);
 
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.id]: e.target.value });
+    setError((prev) => ({ ...prev, [e.target.id]: null, general: null }));
+  };
+
   const login = async (e) => {
     e.preventDefault();
-    setError({}); 
+    setError({});
     try {
       const res = await axios.post(
         "/api/login",
-        { email, password },
+        form,
         { withCredentials: true }
       );
       if (res.status === 200) {
@@ -26,10 +30,8 @@ function Login() {
     } catch (err) {
       const response = err.response?.data;
       if (response?.errors) {
-     
         setError(response.errors);
       } else if (response?.error) {
-        
         setError({ general: response.error });
       } else {
         setError({ general: "Login failed. Please try again." });
@@ -53,7 +55,9 @@ function Login() {
 
           {/* General Error Message */}
           {error.general && (
-            <p className="text-center text-red-500 mb-4">{"Something want wrong! type correctly your email or pw..."}</p>
+            <p className="text-center text-red-500 mb-4">
+              Something went wrong! Type your email or password correctly...
+            </p>
           )}
 
           <form onSubmit={login} className="space-y-6">
@@ -68,8 +72,8 @@ function Login() {
               <input
                 type="text"
                 id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={form.email}
+                onChange={handleChange}
                 placeholder="Enter email..."
                 className={`px-4 py-3 rounded-xl bg-white/40 border backdrop-blur text-orange-900 shadow-inner focus:outline-none focus:ring-2 focus:ring-orange-400 transition ${
                   error.email
@@ -93,8 +97,8 @@ function Login() {
               <input
                 type="password"
                 id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={form.password}
+                onChange={handleChange}
                 placeholder="Enter password..."
                 className={`px-4 py-3 rounded-xl bg-white/40 border backdrop-blur text-orange-900 shadow-inner focus:outline-none focus:ring-2 focus:ring-orange-400 transition ${
                   error.password
