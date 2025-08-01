@@ -38,3 +38,5 @@ app.use("/api/recipes", routersRecipes);
 app.use("/api", loginAndRegisterRoute);
 app.use("/api/text", commentRoute);
 
+module.exports = app;
+
