@@ -10,9 +10,9 @@ app.use(express.static("Public"));
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const corsOptions = {
-  origin: "https://mr-void.vercel.app",
-  methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
-  credentials: true,
+  origin: "https://mr-void-mr-voids-projects-ef477560.vercel.app", // ✅ Valid string origin
+  methods: ["GET", "POST", "PATCH", "DELETE"], // ✅ Valid HTTP methods
+  credentials: true, // ✅ Allows cookies/authorization headers
 };
 app.use(cors(corsOptions));
 app.use(express.json());
