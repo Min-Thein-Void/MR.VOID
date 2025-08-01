@@ -5,12 +5,13 @@ const AuthContext = createContext();
 const AuthReducer = (state, action) => {
   switch (action.type) {
     case "login":
-      localStorage.setItem('token',JSON.stringify(action.payload))
+      // Only store token if needed:
+      localStorage.setItem("token", action.payload.token); // or remove this if using cookies only
       return {
-        user: action.payload,
+        user: action.payload.user,
       };
     case "logout":
-      localStorage.removeItem('token')
+      localStorage.removeItem("token");
       return {
         user: null,
       };
@@ -20,9 +21,7 @@ const AuthReducer = (state, action) => {
 };
 
 const AuthContextProvider = ({ children }) => {
-  let [state, dispatch] = useReducer(AuthReducer, {
-    user: null,
-  });
+  const [state, dispatch] = useReducer(AuthReducer, { user: null });
 
   return (
     <AuthContext.Provider value={{ ...state, dispatch }}>

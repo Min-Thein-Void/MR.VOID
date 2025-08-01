@@ -24,7 +24,7 @@ function Login() {
         { withCredentials: true }
       );
       if (res.status === 200) {
-        dispatch({ type: "login", payload: res.data.user });
+       dispatch({ type: "login", payload: { user: res.data.user, token: res.data.token } });
         navigate("/");
       }
     } catch (err) {

@@ -23,7 +23,7 @@ function Register() {
     try {
       const res = await axios.post("/api/register", form, { withCredentials: true });
       if (res.status === 201) {
-        dispatch({ type: "login", payload: res.data.user });
+        dispatch({ type: "login", payload: { user: res.data.user, token: res.data.token } });
         setSuccess(true);
         setForm({ name: "", email: "", password: "" });
         navigate("/");
